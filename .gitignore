@@ -1,0 +1,8 @@
+/log/
+
+/config/*
+!/config/config_template.yaml
+
+/images/*.xcf
+
+/.idea/
