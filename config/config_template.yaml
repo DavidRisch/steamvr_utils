@@ -13,12 +13,11 @@ basestation:
 audio:
   enabled: true  # Boolean. Enable the Base Station component.
   vr_sink_regex: '.*hdmi.*'  # Regex. Used to find the audio sink of the vr headset.
-  normal_sink_regex: '.*SteelSeries.*'  # Regex. Used to find the audio sink of the regular audio device. Leave empty to detect automatically (not recommended)
+  normal_sink_regex: ''  # Regex. Used to find the audio sink of the regular audio device. Leave empty to detect automatically (not recommended).
   excluded_clients_regexes:  # List of regexes. Used to ignore some audio clients. Intended for application not needed in vr.
     - 'firefox'
-    - 'spotify'
 
 daemon:
-  watch_process_name: 'vrcompositor'  # String. Name of the process which indicated SteamVR is running
+  watch_process_name: 'vrcompositor'  # String. Name of the process which indicated SteamVR is running.
   wait_after_quit: 60  # Float. Number of seconds to wait after SteamVR exits until Base Stations are turned off (and audio is switched). Useful to prevent a power cycle when restarting SteamVR.
 
