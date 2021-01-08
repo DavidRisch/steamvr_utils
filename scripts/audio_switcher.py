@@ -47,10 +47,11 @@ class AudioSwitcher:
         sinks = self.get_all_sinks()
 
         if normal_sink_regex is None:
-            running_sink = ([sink for sink in sinks if sink.is_running] + [None])[0]
-            if running_sink is None:
-                raise RuntimeError('No sink is currently running.')
-            self.normal_sink = running_sink
+            default_sink_name = self.get_default_sink_name()
+            default_sink = ([sink for sink in sinks if sink.name == default_sink_name] + [None])[0]
+            if default_sink is None:
+                raise RuntimeError('Default sink was not found.')
+            self.normal_sink = default_sink
         else:
             self.normal_sink = self.find_matching_sink(sinks, normal_sink_regex, "normal")
         log.d('normal sink: {}'.format(self.normal_sink.name))
@@ -110,7 +111,7 @@ class AudioSwitcher:
 
         for sink_input in sink_inputs:
             failure = \
-            ([failure for failure in self.failed_sink_inputs if failure.sink_input_id == sink_input.id] + [None])[0]
+                ([failure for failure in self.failed_sink_inputs if failure.sink_input_id == sink_input.id] + [None])[0]
             if failure is not None and not failure.try_again():
                 continue
 
@@ -189,6 +190,20 @@ class AudioSwitcher:
             matching_client = ([client for client in clients if client.client_id == sink_input.client_id] + [None])[0]
             if matching_client is not None:
                 sink_input.client_name = matching_client.client_name
+
+    @staticmethod
+    def get_default_sink_name():
+        arguments = ['pactl', 'info']
+        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+
+        info_lines = process.stdout.decode().split('\n')[:-1]
+
+        for line in info_lines:
+            matches = re.match('^Default Sink: (.*)', line)
+            if matches is not None:
+                return matches.group(1)
+
+        raise RuntimeError('No default sink was found.')
 
     def filter_by_client_name(self, sink_inputs):
         excluded_clients_regexes = self.config.excluded_clients_regexes()
