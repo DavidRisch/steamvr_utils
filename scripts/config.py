@@ -64,7 +64,6 @@ class Config:
 
         return False
 
-
     def audio_vr_sink_regex(self):
         if 'audio' in self.data and 'vr_sink_regex' in self.data['audio']:
             return self.data['audio']['vr_sink_regex']
@@ -77,11 +76,29 @@ class Config:
 
         return None
 
-    def excluded_clients_regexes(self):
+    def audio_excluded_clients_regexes(self):
         if 'audio' in self.data and 'excluded_clients_regexes' in self.data['audio']:
             return list(self.data['audio']['excluded_clients_regexes'])
 
         return []
+
+    def audio_set_card_port(self):
+        if 'audio' in self.data and 'set_card_port' in self.data['audio']:
+            return bool(self.data['audio']['set_card_port'])
+
+        return True
+
+    def audio_card_port_product_name_regex(self):
+        if 'audio' in self.data and 'card_port_product_name_regex' in self.data['audio']:
+            return self.data['audio']['card_port_product_name_regex']
+
+        return '(Index HMD)|(VIVE)'
+
+    def audio_card_rescan_pause_time(self):
+        if 'audio' in self.data and 'card_rescan_pause_time' in self.data['audio']:
+            return float(self.data['audio']['card_rescan_pause_time'])
+
+        return 10.0
 
     def daemon_watch_process_name(self):
         if 'daemon' in self.data and 'watch_process_name' in self.data['daemon']:

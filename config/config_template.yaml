@@ -14,8 +14,12 @@ audio:
   enabled: true  # Boolean. Enable the Base Station component.
   vr_sink_regex: '.*hdmi.*'  # Regex. Used to find the audio sink of the vr headset.
   normal_sink_regex: ''  # Regex. Used to find the audio sink of the regular audio device. Leave empty to detect automatically (not recommended).
-  excluded_clients_regexes:  # List of regexes. Used to ignore some audio clients. Intended for application not needed in vr.
+  excluded_clients_regexes: # List of regexes. Used to ignore some audio clients. Intended for application not needed in vr.
     - 'firefox'
+  set_card_port: true  # Boolean. Enable automatic changing the correct port.
+  card_port_product_name_regex: '(Index HMD)|(VIVE)'  # Regex. Used to find the card and port on that card which the vr headset is connected to.
+  # Use `pactl list cards | grep 'device.product.name'` while SteamVR is running to find the name of your vr headset.
+  card_rescan_pause_time: 10  # Float. Number of seconds to wait between suspending and resuming a sink to rescan the ports of its card.
 
 daemon:
   watch_process_name: 'vrcompositor'  # String. Name of the process which indicated SteamVR is running.
