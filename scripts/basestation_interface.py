@@ -108,7 +108,7 @@ Missing Permissions for Bluetooth. Two options:
                     else:
                         return function()
                     success_count += 1
-                    log.e('Success of attempt {} of {}'.format(attempt_count, max_attempts))
+                    log.i('Success of attempt {} of {}'.format(attempt_count, max_attempts))
                 except Exception as e:
                     last_error = e
                     log.e('Failure of attempt {} of {}'.format(attempt_count, max_attempts))
