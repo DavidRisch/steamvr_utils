@@ -208,7 +208,9 @@ class AudioSwitcher:
             if matches is not None:
                 return matches.group(1)
 
-        raise RuntimeError('No default sink was found.')
+        raise RuntimeError('Unable to determine the default sink. '
+                           'Workaround: Fill out the "normal_sink_regex" field in the config file.\n\n'
+                           'Output of `pactl info`:\n{}'.format(process.stdout.decode()))
 
     def get_port(self):
         cards = pactl_interface.Card.get_all_cards()
