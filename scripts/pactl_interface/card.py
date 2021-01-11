@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
 import re
-import subprocess
 
 import log
+
+from . import utlis
 
 
 class Card:
@@ -95,10 +96,10 @@ class Card:
             return
 
         arguments = ['pactl', 'set-card-profile', self.name, profile.name]
-        process = subprocess.run(arguments, stderr=subprocess.PIPE)
+        return_code, stdout, stderr = utlis.run(arguments)
 
-        if process.returncode != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), process.stderr.decode()))
+        if return_code != 0:
+            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
 
     def __eq__(self, other):
         if isinstance(other, type(self)):
@@ -111,17 +112,17 @@ class Card:
     @staticmethod
     def rescan_all_cards():
         arguments = ['pactl', 'load-module', 'module-detect']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = utlis.run(arguments)
 
-        if process.returncode != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), process.stderr.decode()))
+        if return_code != 0:
+            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
 
     @classmethod
     def get_all_cards(cls):
         arguments = ['pactl', 'list', 'cards']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = utlis.run(arguments)
 
-        cards = process.stdout.decode()
+        cards = stdout
 
         class Node:
             # https://stackoverflow.com/a/53346240/13623303

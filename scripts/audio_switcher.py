@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import re
-import subprocess
 import time
 
 import log
@@ -71,7 +70,7 @@ class AudioSwitcher:
             return vr_matches[0]
 
         elif len(vr_matches) == 0:
-            log.e('No {} audio sink for the was found. Tried to find a match for: {}'.format(name, regex))
+            log.e('No {} audio sink for the normal device was found. Tried to find a match for: {}'.format(name, regex))
         else:
             raise RuntimeError(
                 'Multiple matches for the {} audio sink found. Tried to find a match for: {}'.format(name, regex))
@@ -117,10 +116,10 @@ class AudioSwitcher:
             return
 
         arguments = ['pactl', 'set-default-sink', sink.name]
-        process = subprocess.run(arguments, stderr=subprocess.PIPE)
+        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
 
-        if process.returncode != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), process.stderr.decode()))
+        if return_code != 0:
+            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
             self.log_state()
 
     def set_sink_for_all_sink_inputs(self, sink):
@@ -139,9 +138,9 @@ class AudioSwitcher:
                 continue
 
             arguments = ['pactl', 'move-sink-input', str(sink_input.id), sink.name]
-            process = subprocess.run(arguments, stderr=subprocess.PIPE)
+            return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
 
-            if process.returncode != 0:
+            if return_code != 0:
                 if failure is None:
                     failure = self.Failure(sink_input.id)
                     self.failed_sink_inputs.append(failure)
@@ -152,7 +151,7 @@ class AudioSwitcher:
                     " ".join(arguments),
                     sink_input.client_name,
                     failure.failure_count,
-                    process.stderr.decode()))
+                    stderr))
                 self.log_state()
 
     def get_all_sink_inputs(self):
@@ -163,13 +162,13 @@ class AudioSwitcher:
                 self.client_name = None
 
         arguments = ['pactl', 'list', 'short', 'sink-inputs']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
 
         if self.last_pactl_sink_inputs is None:
-            log.d('\'{}\':\n{}'.format(" ".join(arguments), process.stdout.decode()))
-        self.last_pactl_sink_inputs = process.stdout.decode()
+            log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
+        self.last_pactl_sink_inputs = stdout
 
-        sink_inputs_lines = process.stdout.decode().split('\n')[:-1]
+        sink_inputs_lines = stdout.split('\n')[:-1]
 
         sink_inputs = [SinkInput(line) for line in sink_inputs_lines]
         return sink_inputs
@@ -181,13 +180,13 @@ class AudioSwitcher:
                 self.client_name = line.split('\t')[2]
 
         arguments = ['pactl', 'list', 'short', 'clients']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
 
         if self.last_pactl_clients is None:
-            log.d('\'{}\':\n{}'.format(" ".join(arguments), process.stdout.decode()))
-        self.last_pactl_clients = process.stdout.decode()
+            log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
+        self.last_pactl_clients = stdout
 
-        client_lines = process.stdout.decode().split('\n')[:-1]
+        client_lines = stdout.split('\n')[:-1]
 
         clients = [Client(line) for line in client_lines]
 
@@ -199,9 +198,9 @@ class AudioSwitcher:
     @staticmethod
     def get_default_sink_name():
         arguments = ['pactl', 'info']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
 
-        info_lines = process.stdout.decode().split('\n')[:-1]
+        info_lines = stdout.split('\n')[:-1]
 
         for line in info_lines:
             matches = re.match('^Default Sink: (.*)', line)
@@ -210,7 +209,7 @@ class AudioSwitcher:
 
         raise RuntimeError('Unable to determine the default sink. '
                            'Workaround: Fill out the "normal_sink_regex" field in the config file.\n\n'
-                           'Output of `pactl info`:\n{}'.format(process.stdout.decode()))
+                           'Output of `pactl info`:\n{}'.format(stdout))
 
     def get_port(self):
         cards = pactl_interface.Card.get_all_cards()

@@ -1,6 +1,6 @@
-import subprocess
-
 import log
+
+from . import utlis
 
 
 class Sink:
@@ -19,21 +19,21 @@ class Sink:
 
         arguments = ['pactl', 'suspend-sink', self.name, state]
         log.d('set_suspend_state {}'.format(' '.join(arguments)))
-        process = subprocess.run(arguments, stderr=subprocess.PIPE)
+        return_code, stdout, stderr = utlis.run(arguments)
 
-        if process.returncode != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), process.stderr.decode()))
+        if return_code != 0:
+            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
 
     @classmethod
     def get_all_sinks(cls, audio_switcher):
         arguments = ['pactl', 'list', 'short', 'sinks']
-        process = subprocess.run(arguments, stdout=subprocess.PIPE)
+        return_code, stdout, stderr = utlis.run(arguments)
 
         if audio_switcher.last_pactl_sinks is None:
-            log.d('\'{}\':\n{}'.format(" ".join(arguments), process.stdout.decode()))
-        audio_switcher.last_pactl_sinks = process.stdout.decode()
+            log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
+        audio_switcher.last_pactl_sinks = stdout
 
-        sinks_lines = process.stdout.decode().split('\n')[:-1]
+        sinks_lines = stdout.split('\n')[:-1]
 
         sinks = [cls(line) for line in sinks_lines]
         return sinks
