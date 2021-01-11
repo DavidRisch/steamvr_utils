@@ -10,6 +10,7 @@ import log
 
 class SteamvrDaemon:
     class Stages(enum.Enum):
+        STARTUP = enum.auto
         BEFORE_STEAMVR = enum.auto()
         DURING_STEAMVR = enum.auto()
         AFTER_STEAMVR = enum.auto()
@@ -18,10 +19,8 @@ class SteamvrDaemon:
         self.steamvr_utils = steamvr_utils
         self.config = steamvr_utils.config
 
-        self.current_stage = self.Stages.BEFORE_STEAMVR
+        self.current_stage = self.Stages.STARTUP
         self.start_of_current_stage = time.time()
-
-        self.steamvr_utils.turn_on()
 
     def update_stage(self, new_stage):
         log.i('SteamvrDaemon changed state to: {}'.format(new_stage.name))
@@ -53,7 +52,13 @@ class SteamvrDaemon:
             sys.exit()
 
     def loop(self):
+        if self.current_stage == self.Stages.STARTUP:
+            self.steamvr_utils.turn_on()
+
+            self.current_stage = self.Stages.BEFORE_STEAMVR
+
         continue_running = self.check()
+
         if self.current_stage == self.Stages.DURING_STEAMVR:
             self.steamvr_utils.turn_on_iteration()
 

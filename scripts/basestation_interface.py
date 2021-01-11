@@ -1,4 +1,5 @@
 import enum
+import time
 
 # sudo apt install pip3 libglib2.0-dev
 # sudo pip3 install bluepy
@@ -108,11 +109,13 @@ Missing Permissions for Bluetooth. Two options:
                     else:
                         return function()
                     success_count += 1
-                    log.i('Success of attempt {} of {}'.format(attempt_count, max_attempts))
+                    log.i('Success of attempt {} of {}'.format(attempt_count + 1, max_attempts))
                 except Exception as e:
                     last_error = e
-                    log.e('Failure of attempt {} of {}'.format(attempt_count, max_attempts))
+                    log.e('Failure of attempt {} of {}'.format(attempt_count + 1, max_attempts))
                 attempt_count += 1
+
+                time.sleep(0.5)  # to increase robustness
 
             if success_count == 0:
                 log.e('No successful attempt in any of the {} attempts. Last error:'.format(max_attempts))
