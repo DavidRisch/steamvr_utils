@@ -88,7 +88,7 @@ class Card:
                         self.ports.append(self.Port(port_dict, self))
 
         if self.name is None or self.ports is None:
-            raise RuntimeError('Parsing of card failed.')
+            raise RuntimeError('Parsing of card failed:\n{}'.format(in_dict))
 
     def set_profile(self, config, profile):
         if config.dry_run():
