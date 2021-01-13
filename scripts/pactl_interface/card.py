@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import re
 
 import log
@@ -66,7 +64,7 @@ class Card:
     def __init__(self, in_dict):
         self.name = None
         self.profiles = None
-        self.ports = None
+        self.ports = []
 
         card_dict = list(in_dict.items())[0][1]
 
@@ -87,8 +85,8 @@ class Card:
                     for port_dict in content:
                         self.ports.append(self.Port(port_dict, self))
 
-        if self.name is None or self.ports is None:
-            raise RuntimeError('Parsing of card failed:\n{}'.format(in_dict))
+        if self.name is None:
+            raise RuntimeError('Parsing of card failed (no name found):\n{}'.format(in_dict))
 
     def set_profile(self, config, profile):
         if config.dry_run():
@@ -159,7 +157,3 @@ class Card:
             cards.append(cls(card_dict))
 
         return cards
-
-
-if __name__ == '__main__':
-    print(Card.get_all_cards())
