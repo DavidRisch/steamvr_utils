@@ -63,6 +63,10 @@ Missing Permissions for Bluetooth. Two options:
                 raise e
 
         self.devices = delegate.devices
+        if len(self.devices) == 0:
+            raise RuntimeError('Bluetooth scan found no Base Stations. '
+                               'If there are powered Base Stations near you, '
+                               'this is probably a problem with your Bluetooth device.')
 
     def action(self, action):
         address = 0x12  # location of the byte which sets the power state
@@ -112,7 +116,7 @@ Missing Permissions for Bluetooth. Two options:
                     log.i('Success of attempt {} of {}'.format(attempt_count + 1, max_attempts))
                 except Exception as e:
                     last_error = e
-                    log.e('Failure of attempt {} of {}'.format(attempt_count + 1, max_attempts))
+                    log.e('Failure of attempt {} of {}: {}'.format(attempt_count + 1, max_attempts, e))
                 attempt_count += 1
 
                 time.sleep(0.5)  # to increase robustness
@@ -121,5 +125,7 @@ Missing Permissions for Bluetooth. Two options:
                 log.e('No successful attempt in any of the {} attempts. Last error:'.format(max_attempts))
                 raise last_error
 
+        log.i("Scanning for Base Stations:")
         attempt_loop(lambda: self.scan(), self.config.basestation_attempt_count_scan())
+        log.i("Changing power state of Base Stations:")
         attempt_loop(lambda: self.action(action), self.config.basestation_attempt_count_set(), try_all=True)
