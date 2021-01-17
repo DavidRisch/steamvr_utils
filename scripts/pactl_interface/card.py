@@ -25,7 +25,10 @@ class Card:
             self.profiles = []
             self.card = card
 
-            key, contents = list(in_dict.items())[0]
+            if isinstance(in_dict, str):
+                key, contents = in_dict, []
+            else:
+                key, contents = list(in_dict.items())[0]
 
             match = re.match('^(.*): ', key)
             self.name = match.group(1)
@@ -35,7 +38,7 @@ class Card:
                     for property_item in content['Properties:']:
                         if isinstance(property_item, dict):
                             property_item, _ = list(property_item.items())[0]
-                        match = re.match('^device.product.name = \"(.*)$', property_item)
+                        match = re.match('^device.product.name = \"(.*)\"$', property_item)
                         if match is not None:
                             self.product_name = match.group(1)
                 else:
@@ -115,12 +118,29 @@ class Card:
         if return_code != 0:
             log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
 
+    @staticmethod
+    def cleanup_pactl_output(cards):
+        # Sometimes 'device.product.name' contains a newline which causes problems.
+        # This is detected by lines beginning with a space or quote.
+        cleaned_cards = ''
+        previous_line = ''
+        for line in cards.splitlines():
+            if len(line) > 0:
+                if line[0] == ' ' or line[0] == '"':
+                    previous_line += line
+                else:
+                    cleaned_cards += previous_line + '\n'
+                    previous_line = line
+        return cleaned_cards
+
     @classmethod
     def get_all_cards(cls):
         arguments = ['pactl', 'list', 'cards']
         return_code, stdout, stderr = utlis.run(arguments)
 
         cards = stdout
+
+        cards = cls.cleanup_pactl_output(cards)
 
         class Node:
             # https://stackoverflow.com/a/53346240/13623303

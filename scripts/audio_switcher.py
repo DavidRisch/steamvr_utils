@@ -224,7 +224,7 @@ class AudioSwitcher:
         for card in cards:
             debug_output += card.name + '\n'
             for port in card.ports:
-                debug_output += '    {}\n'.format(port.product_name)
+                debug_output += '    {}\n'.format(port.product_name if port.product_name is not None else '-')
         log.w('Failed to find any port on any card matching "{}". Name of the product at every port:\n{}'.format(
             card_port_product_name_regex, debug_output
         ))
