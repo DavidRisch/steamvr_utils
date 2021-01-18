@@ -2,14 +2,14 @@
 
 This project contains scripts to improve the functionally of SteamVR on Linux:
 
-- Turning Base Stations on/off (via Bluetooth)
+- Turning Base Stations (V1 or V2) on/off (via Bluetooth)
 - Changing the audio output of games to the headset and back to the normal audio device
 
-A deamon can start automatically with SteamVR (via launch options), once SteamVr is closed the Base Stations are turned
+A daemon can start automatically with SteamVR (via launch options), once SteamVR is closed the Base Stations are turned
 off again. Alternatively the scripts can be executed manually.
 
-- Currently, this is known to work with a Valve Index and V2 Base Stations. Other headsets might work.
-- For the basestation component a bluetooth device capable of btle (Bluetooth Low Energy) is required.
+- Currently, this is known to work with a Valve Index, V2 Base Stations and V1 Base Stations. Other headsets might work.
+- For the Base Station component a Bluetooth device capable of btle (Bluetooth Low Energy) is required.
 - For the audio component PulseAudio (more specifically pactl, which is installed by default) is required.
 
 This project is not affiliated with SteamVR, Steam or Valve.
@@ -72,6 +72,8 @@ If you chose a name other than `config.yaml` you will have to specify its locati
 
 The default config file contains explanations on each available field.
 
+For usage with V1 Base Stations some configuration is required, V2 Base Stations work out-of-the-box.
+
 ## Acknowledgments
 
 - Part of `scripts/basestation_interface/v2_interface.py` is based
@@ -79,5 +81,5 @@ The default config file contains explanations on each available field.
 - Part of `scripts/install.py` is based
   on [a reddit post by Brunfunstudios](https://np.reddit.com/r/virtualreality_linux/comments/g02bi5/automatically_turn_on_and_off_base_stations_when/)
   .
-- `scripts/basestation_interface/lhvtrl.py` is copied from [a repo by risa2000](https://github.com/risa2000) under the
-  MIT license.
+- `scripts/basestation_interface/lhctrl.py` is copied from [a repo by risa2000](https://github.com/risa2000/lhctrl)
+  under the MIT license.
