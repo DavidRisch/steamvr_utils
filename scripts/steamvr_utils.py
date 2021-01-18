@@ -3,9 +3,9 @@
 import argparse
 import enum
 
+import basestation_interface
 import log
 from audio_switcher import AudioSwitcher
-from basestation_interface import BasestationPowerInterface
 from config import Config
 from steamvr_daemon import SteamvrDaemon
 
@@ -26,7 +26,12 @@ class SteamvrUtils:
         self.audio_switcher = None
 
         if self.config.basestation_enabled():
-            self.basestation_power_interface = BasestationPowerInterface(config)
+            basestation_type = self.config.basestation_type()
+            if basestation_type == "v1":
+                self.basestation_power_interface = basestation_interface.V1BasestationInterface(config)
+            elif basestation_type == "v2":
+                self.basestation_power_interface = basestation_interface.V2BasestationInterface(config)
+
         if self.config.audio_enabled():
             self.audio_switcher = AudioSwitcher(config)
 
@@ -48,7 +53,7 @@ class SteamvrUtils:
         log.i('SteamvrUtils turning off:')
 
         if self.basestation_power_interface is not None:
-            self.basestation_power_interface.robust_action(BasestationPowerInterface.Action.OFF)
+            self.basestation_power_interface.action(basestation_interface.Action.OFF)
 
         if self.audio_switcher is not None:
             self.audio_switcher.switch_to_normal()
@@ -57,7 +62,7 @@ class SteamvrUtils:
         log.i('SteamvrUtils turning on:')
 
         if self.basestation_power_interface is not None:
-            self.basestation_power_interface.robust_action(BasestationPowerInterface.Action.ON)
+            self.basestation_power_interface.action(basestation_interface.Action.ON)
 
         if self.audio_switcher is not None:
             self.audio_switcher.switch_to_vr()

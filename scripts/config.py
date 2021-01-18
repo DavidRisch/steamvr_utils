@@ -46,6 +46,16 @@ class Config:
 
         return False
 
+    def basestation_type(self):
+        if 'basestation' in self.data and 'type' in self.data['basestation']:
+            basestation_type = self.data['basestation']['type']
+            valid_types = ['v1', 'v2']
+            if basestation_type not in valid_types:
+                raise RuntimeError('Invalid value for basestation.type, valid options: {}'.format(valid_types))
+            return basestation_type
+
+        return 'v2'
+
     def basestation_attempt_count_scan(self):
         if 'basestation' in self.data and 'attempt_count_scan' in self.data['basestation']:
             return int(self.data['basestation']['attempt_count_scan'])
@@ -57,6 +67,30 @@ class Config:
             return int(self.data['basestation']['attempt_count_set'])
 
         return 5
+
+    def basestation_mac_address(self, mode):
+        if mode not in ['b', 'c']:
+            raise RuntimeError()
+
+        field_name = 'lh_{}_mac'.format(mode)
+
+        if 'basestation' in self.data and field_name in self.data['basestation']:
+            if len(self.data['basestation'][field_name]) > 0:
+                return self.data['basestation'][field_name]
+
+        raise RuntimeError('Value basestation.{} must be set when using V1 Base Stations'.format(field_name))
+
+    def basestation_id(self, mode):
+        if mode not in ['b', 'c']:
+            raise RuntimeError()
+
+        field_name = 'lh_{}_id'.format(mode)
+
+        if 'basestation' in self.data and field_name in self.data['basestation']:
+            if len(self.data['basestation'][field_name]) > 0:
+                return self.data['basestation'][field_name]
+
+        raise RuntimeError('Value basestation.{} must be set when using V1 Base Stations'.format(field_name))
 
     def audio_enabled(self):
         if 'audio' in self.data and 'enabled' in self.data['audio']:

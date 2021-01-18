@@ -8,8 +8,7 @@ This project contains scripts to improve the functionally of SteamVR on Linux:
 A deamon can start automatically with SteamVR (via launch options), once SteamVr is closed the Base Stations are turned
 off again. Alternatively the scripts can be executed manually.
 
-- Currently, this is known to work with a Valve Index and V2 Base Stations. Other headsets and V1 Base Stations might
-  work.
+- Currently, this is known to work with a Valve Index and V2 Base Stations. Other headsets might work.
 - For the basestation component a bluetooth device capable of btle (Bluetooth Low Energy) is required.
 - For the audio component PulseAudio (more specifically pactl, which is installed by default) is required.
 
@@ -75,8 +74,10 @@ The default config file contains explanations on each available field.
 
 ## Acknowledgments
 
-- Part of `scripts/basestaion_power.py` is based
+- Part of `scripts/basestation_interface/v2_interface.py` is based
   on [a gist by waylonflinn](https://gist.github.com/waylonflinn/d525e08674ec3abb5c98cd41d1fd2f24).
 - Part of `scripts/install.py` is based
   on [a reddit post by Brunfunstudios](https://np.reddit.com/r/virtualreality_linux/comments/g02bi5/automatically_turn_on_and_off_base_stations_when/)
   .
+- `scripts/basestation_interface/lhvtrl.py` is copied from [a repo by risa2000](https://github.com/risa2000) under the
+  MIT license.

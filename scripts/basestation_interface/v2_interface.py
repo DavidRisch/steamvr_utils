@@ -1,24 +1,20 @@
-import enum
 import time
 
 # sudo apt install pip3 libglib2.0-dev
 # sudo pip3 install bluepy
 import bluepy
-
 import log
+
+from .interface import BasestationInterface
 
 
 # based on: https://gist.github.com/waylonflinn/d525e08674ec3abb5c98cd41d1fd2f24
 
 
-class BasestationPowerInterface:
-    class Action(enum.Enum):
-        ON = enum.auto()
-        OFF = enum.auto()
-        TOGGLE = enum.auto()
+class V2BasestationInterface(BasestationInterface):
 
     def __init__(self, config):
-        self.config = config
+        super().__init__(config)
 
         self.devices = []
 
@@ -68,23 +64,13 @@ Missing Permissions for Bluetooth. Two options:
                                'If there are powered Base Stations near you, '
                                'this is probably a problem with your Bluetooth device.')
 
-    def action(self, action):
+    def action_attempt(self, action):
         address = 0x12  # location of the byte which sets the power state
 
         for device in self.devices:
             basestation = bluepy.btle.Peripheral()
             log.i('Connecting to {}'.format(device))
             basestation.connect(device, addrType=bluepy.btle.ADDR_TYPE_RANDOM)
-
-            if action == self.Action.TOGGLE:
-                # only the state of the first base station is used to determine the target state
-                current_state = basestation.readCharacteristic(address)
-                if current_state == b'\x00':  # currently turned off
-                    action = self.Action.ON
-                    log.i('Currently turned off')
-                else:
-                    action = self.Action.OFF
-                    log.i('Currently turned on')
 
             if action == self.Action.ON:
                 if not self.config.dry_run():
@@ -101,7 +87,7 @@ Missing Permissions for Bluetooth. Two options:
 
             basestation.disconnect()
 
-    def robust_action(self, action):
+    def action(self, action):
         def attempt_loop(function, max_attempts, try_all=False):
             attempt_count = 0
             success_count = 0
@@ -128,4 +114,4 @@ Missing Permissions for Bluetooth. Two options:
         log.i("Scanning for Base Stations:")
         attempt_loop(lambda: self.scan(), self.config.basestation_attempt_count_scan())
         log.i("Changing power state of Base Stations:")
-        attempt_loop(lambda: self.action(action), self.config.basestation_attempt_count_set(), try_all=True)
+        attempt_loop(lambda: self.action_attempt(action), self.config.basestation_attempt_count_set(), try_all=True)

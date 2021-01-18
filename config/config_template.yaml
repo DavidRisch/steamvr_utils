@@ -7,8 +7,21 @@ log:
 
 basestation:
   enabled: true  # Boolean. Enable the Base Station component.
-  attempt_count_scan: 5  # Int >0. Maximum number of attempts to find Base Stations.
+
+  # ==== FOR V1 AND V2 BASE STATIONS ====
   attempt_count_set: 5  # Int >0. Number of attempts to set the power state of Base Station.
+
+  # ==== FOR V2 BASE STATIONS ONLY ====
+  type: 'v2'  # Enum(v1, v2). Version of your Base Stations.
+  attempt_count_scan: 5  # Int >0. Maximum number of attempts to find Base Stations.
+
+  # ==== FOR V1 BASE STATIONS ONLY ====
+  # change the 'type' (a few lines up) to 'v1'
+  lh_b_mac: ''  # String(XX:XX:XX:XX:XX:XX). Bluetooth MAC address of Lighthouse B.
+  lh_b_id: ''  # String(XXXXXXXX). ID of Lighthouse B (printed on the back).
+  lh_c_mac: ''  # String(XX:XX:XX:XX:XX:XX). Bluetooth MAC address of Lighthouse C.
+  lh_c_id: ''  # String(XXXXXXXX). ID of Lighthouse C (printed on the back).
+  # See https://github.com/risa2000/lhctrl for details.
 
 audio:
   enabled: true  # Boolean. Enable the Base Station component.
