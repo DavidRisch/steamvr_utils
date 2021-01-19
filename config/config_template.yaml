@@ -22,7 +22,7 @@ basestation:
   lh_c_mac: ''  # String(XX:XX:XX:XX:XX:XX). Bluetooth MAC address of Lighthouse C.
   lh_c_id: ''  # String(XXXXXXXX). ID of Lighthouse C (printed on the back).
   # See https://github.com/risa2000/lhctrl for details.
-nc  # If your Base Stations operate in A/B mode (with a sy cable), fill the fields intended for C with the values from A.
+  # If your Base Stations operate in A/B mode (with a sy cable), fill the fields intended for C with the values from A.
 
 audio:
   enabled: true  # Boolean. Enable the Base Station component.
