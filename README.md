@@ -38,6 +38,9 @@ Get launch options to configure SteamVr with and create desktop shortcuts:
 
 ## Usage
 
+Depending on your setup some configuration (see section below) may be required before these commands work.
+Try out what works before changing the default configuration.
+
 #### Start daemon automatically when SteamVr starts:
 
 Follow the instruction returned by `./scripts/install.py`.
@@ -62,8 +65,7 @@ Follow the instruction returned by `./scripts/install.py`.
 
 ## Configuration
 
-First copy the default config file:
-
+First make a copy of the default config file:
 ```bash
 cp ./config/config_template.yaml ./config/config.yaml
 ```
@@ -71,6 +73,10 @@ cp ./config/config_template.yaml ./config/config.yaml
 If you chose a name other than `config.yaml` you will have to specify its location (`--config` argument).
 
 The default config file contains explanations on each available field.
+Some config values are regular expressions (regexes), to get help with configuring them correctly see the output of:
+```bash
+./scripts/steamvr_utils.py config-help
+```
 
 For usage with V1 Base Stations some configuration is required, V2 Base Stations work out-of-the-box.
 

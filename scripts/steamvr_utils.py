@@ -8,13 +8,14 @@ import log
 from audio_switcher import AudioSwitcher
 from config import Config
 from steamvr_daemon import SteamvrDaemon
-
+from config_helper import ConfigHelper
 
 class SteamvrUtils:
     class Action(enum.Enum):
         ON = enum.auto()
         OFF = enum.auto()
-        daemon = enum.auto()
+        DAEMON = enum.auto()
+        CONFIG_HELP = enum.auto()
 
     def __init__(self, config):
         self.config = config
@@ -40,7 +41,7 @@ class SteamvrUtils:
             self.turn_on()
         elif action == self.Action.OFF:
             self.turn_off()
-        elif action == self.Action.daemon:
+        elif action == self.Action.DAEMON:
             self.start_daemon()
         else:
             raise NotImplementedError('Action: {}'.format(action))
@@ -76,7 +77,8 @@ def main():
     actions = {
         SteamvrUtils.Action.ON: ['on', '1'],
         SteamvrUtils.Action.OFF: ['off', '0'],
-        SteamvrUtils.Action.daemon: ['daemon', 'd']
+        SteamvrUtils.Action.DAEMON: ['daemon', 'd'],
+        SteamvrUtils.Action.CONFIG_HELP: ['config-help', 'c']
     }
 
     parser = argparse.ArgumentParser()
@@ -101,16 +103,23 @@ def main():
 
     # noinspection PyBroadException
     try:
-        log.d('dry_run: {}'.format(config.dry_run()))
 
-        steamvr_utils = SteamvrUtils(
-            config=config
-        )
 
         selected_action = None
         for action in SteamvrUtils.Action:
             if args.action in actions[action]:
                 selected_action = action
+
+        if selected_action == SteamvrUtils.Action.CONFIG_HELP:
+            config_helper = ConfigHelper(config)
+            config_helper.print_help()
+            return
+
+        log.d('dry_run: {}'.format(config.dry_run()))
+
+        steamvr_utils = SteamvrUtils(
+            config=config
+        )
 
         steamvr_utils.action(selected_action)
     except Exception:
