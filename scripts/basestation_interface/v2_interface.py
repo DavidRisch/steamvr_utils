@@ -38,7 +38,7 @@ class V2BasestationInterface(BasestationInterface):
                     self.devices.append(dev.addr)
 
         self.devices = []
-        scanner = bluepy.btle.Scanner()
+        scanner = bluepy.btle.Scanner(iface=self.config.basestation_bluetooth_interface())
         delegate = Delegate()
         scanner.withDelegate(delegate)
         try:
@@ -68,7 +68,7 @@ Missing Permissions for Bluetooth. Two options:
         address = 0x12  # location of the byte which sets the power state
 
         for device in self.devices:
-            basestation = bluepy.btle.Peripheral()
+            basestation = bluepy.btle.Peripheral(iface=self.config.basestation_bluetooth_interface())
             log.i('Connecting to {}'.format(device))
             basestation.connect(device, addrType=bluepy.btle.ADDR_TYPE_RANDOM)
 

@@ -56,6 +56,12 @@ class Config:
 
         return 'v2'
 
+    def basestation_bluetooth_interface(self):
+        if 'basestation' in self.data and 'bluetooth_interface' in self.data['basestation']:
+            return int(self.data['basestation']['bluetooth_interface'])
+
+        return 0
+
     def basestation_attempt_count_scan(self):
         if 'basestation' in self.data and 'attempt_count_scan' in self.data['basestation']:
             return int(self.data['basestation']['attempt_count_scan'])

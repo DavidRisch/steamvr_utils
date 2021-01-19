@@ -10,6 +10,8 @@ basestation:
 
   # ==== FOR V1 AND V2 BASE STATIONS ====
   attempt_count_set: 5  # Int >0. Number of attempts to set the power state of Base Station.
+  bluetooth_interface: 0  # Int. Number of the bluetooth interface (hci{number}) to use.
+  # Run `hciconfig -a` for a list of bluetooth interfaces.
 
   # ==== FOR V2 BASE STATIONS ONLY ====
   type: 'v2'  # Enum(v1, v2). Version of your Base Stations.

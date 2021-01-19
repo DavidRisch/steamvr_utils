@@ -35,6 +35,7 @@ class V1BasestationInterface(BasestationInterface):
                 '--ping_sleep', str(5),
                 '--try_count', str(self.config.basestation_attempt_count_set()),
                 '--try_pause', str(1),
+                '--interface', str(self.config.basestation_bluetooth_interface()),
             ]
 
             log.i("Starting lhctrl: {}".format(arguments))
