@@ -123,8 +123,8 @@ class AudioSwitcher:
             self.log_state()
 
     def set_sink_for_all_sink_inputs(self, sink):
-        sink_inputs = self.get_all_sink_inputs()
-        self.get_client_names(sink_inputs)
+        sink_inputs = pactl_interface.SinkInput.get_all_sink_inputs(self)
+        pactl_interface.Client.get_client_names(sink_inputs)
         sink_inputs = self.filter_by_client_name(sink_inputs)
 
         if self.config.dry_run():
@@ -153,47 +153,6 @@ class AudioSwitcher:
                     failure.failure_count,
                     stderr))
                 self.log_state()
-
-    def get_all_sink_inputs(self):
-        class SinkInput:
-            def __init__(self, line):
-                self.id = int(line.split('\t')[0])
-                self.client_id = int(line.split('\t')[2])
-                self.client_name = None
-
-        arguments = ['pactl', 'list', 'short', 'sink-inputs']
-        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
-
-        if self.last_pactl_sink_inputs is None:
-            log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
-        self.last_pactl_sink_inputs = stdout
-
-        sink_inputs_lines = stdout.split('\n')[:-1]
-
-        sink_inputs = [SinkInput(line) for line in sink_inputs_lines]
-        return sink_inputs
-
-    def get_client_names(self, sink_inputs):
-        class Client:
-            def __init__(self, line):
-                self.client_id = int(line.split('\t')[0])
-                self.client_name = line.split('\t')[2]
-
-        arguments = ['pactl', 'list', 'short', 'clients']
-        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
-
-        if self.last_pactl_clients is None:
-            log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
-        self.last_pactl_clients = stdout
-
-        client_lines = stdout.split('\n')[:-1]
-
-        clients = [Client(line) for line in client_lines]
-
-        for sink_input in sink_inputs:
-            matching_client = ([client for client in clients if client.client_id == sink_input.client_id] + [None])[0]
-            if matching_client is not None:
-                sink_input.client_name = matching_client.client_name
 
     @staticmethod
     def get_default_sink_name():
