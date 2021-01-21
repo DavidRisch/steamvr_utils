@@ -13,8 +13,6 @@ class SinkInput:
         else:
             self.client_id = int(client_id_str)
 
-        self.client_id = None
-
         self.client_name = None
 
     @classmethod
