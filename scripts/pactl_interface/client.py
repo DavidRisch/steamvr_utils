@@ -28,6 +28,9 @@ class Client:
         clients = cls.get_all_clients()
 
         for sink_input in sink_inputs:
+            if sink_input.client_id is None:
+                continue
+
             matching_client = ([client for client in clients if client.client_id == sink_input.client_id] + [None])[0]
             if matching_client is not None:
                 sink_input.client_name = matching_client.client_name

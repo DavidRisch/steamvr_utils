@@ -198,7 +198,8 @@ class AudioSwitcher:
         for sink_input in sink_inputs:
             is_excluded = False
             for excluded_client_regex in excluded_clients_regexes:
-                if re.match(excluded_client_regex, sink_input.client_name):
+                if sink_input.client_name is not None and \
+                        re.match(excluded_client_regex, sink_input.client_name):
                     is_excluded = True
                     break
 

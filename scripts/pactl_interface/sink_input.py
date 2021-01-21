@@ -6,7 +6,15 @@ from . import utlis
 class SinkInput:
     def __init__(self, line):
         self.id = int(line.split('\t')[0])
-        self.client_id = int(line.split('\t')[2])
+        client_id_str = line.split('\t')[2]
+
+        if client_id_str == "-":
+            self.client_id = None
+        else:
+            self.client_id = int(client_id_str)
+
+        self.client_id = None
+
         self.client_name = None
 
     @classmethod
