@@ -7,8 +7,9 @@ import basestation_interface
 import log
 from audio_switcher import AudioSwitcher
 from config import Config
-from steamvr_daemon import SteamvrDaemon
 from config_helper import ConfigHelper
+from steamvr_daemon import SteamvrDaemon
+
 
 class SteamvrUtils:
     class Action(enum.Enum):
@@ -28,10 +29,14 @@ class SteamvrUtils:
 
         if self.config.basestation_enabled():
             basestation_type = self.config.basestation_type()
-            if basestation_type == "v1":
+            if basestation_type == 'v1':
                 self.basestation_power_interface = basestation_interface.V1BasestationInterface(config)
-            elif basestation_type == "v2":
+            elif basestation_type == 'v2':
                 self.basestation_power_interface = basestation_interface.V2BasestationInterface(config)
+            elif basestation_type == 'cmd':
+                self.basestation_power_interface = basestation_interface.CmdBasestationInterface(config)
+            else:
+                raise NotImplementedError()
 
         if self.config.audio_enabled():
             self.audio_switcher = AudioSwitcher(config)
@@ -103,7 +108,6 @@ def main():
 
     # noinspection PyBroadException
     try:
-
 
         selected_action = None
         for action in SteamvrUtils.Action:

@@ -7,6 +7,7 @@ log:
 
 basestation:
   enabled: true  # Boolean. Enable the Base Station component.
+  type: 'v2'  # Enum(v1, v2, cmd). Version of your Base Stations or 'cmd' for custom commands.
 
   # ==== FOR V1 AND V2 BASE STATIONS ====
   attempt_count_set: 5  # Int >0. Number of attempts to set the power state of Base Station.
@@ -14,17 +15,22 @@ basestation:
   # Run `hciconfig -a` for a list of bluetooth interfaces.
 
   # ==== FOR V2 BASE STATIONS ONLY ====
-  type: 'v2'  # Enum(v1, v2). Version of your Base Stations.
   attempt_count_scan: 5  # Int >0. Maximum number of attempts to find Base Stations.
 
   # ==== FOR V1 BASE STATIONS ONLY ====
-  # change the 'type' (a few lines up) to 'v1'
+  # (change the 'type' (a few lines up) to 'v1')
   lh_b_mac: ''  # String(XX:XX:XX:XX:XX:XX). Bluetooth MAC address of Lighthouse B.
   lh_b_id: ''  # String(XXXXXXXX). ID of Lighthouse B (printed on the back).
   lh_c_mac: ''  # String(XX:XX:XX:XX:XX:XX). Bluetooth MAC address of Lighthouse C.
   lh_c_id: ''  # String(XXXXXXXX). ID of Lighthouse C (printed on the back).
   # See https://github.com/risa2000/lhctrl for details.
-  # If your Base Stations operate in A/B mode (with a sy cable), fill the fields intended for C with the values from A.
+  # If your Base Stations operate in A/B mode (with a sync cable), fill the fields intended for C with the values from A.
+
+  # ==== FOR CUSTOM BASE STATIONS COMMANDS ONLY ====
+  # (change the 'type' (a few lines up) to 'cmd')
+  command_on: [ 'bash', '-c', 'echo command_on | tee /tmp/steamvr_basestation_command_test' ] # List of strings. Command to execute in order to turn Base Stations on.
+  command_off: [ 'bash', '-c', 'echo command_off | tee /tmp/steamvr_basestation_command_test' ] # List of strings. Command to execute in order to turn Base Stations off.
+  # This can be used to control the base stations in an unconventional setup (e.g. https://github.com/DavidRisch/steamvr_utils/issues/8).
 
 audio:
   enabled: true  # Boolean. Enable the Base Station component.

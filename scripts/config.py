@@ -49,7 +49,7 @@ class Config:
     def basestation_type(self):
         if 'basestation' in self.data and 'type' in self.data['basestation']:
             basestation_type = self.data['basestation']['type']
-            valid_types = ['v1', 'v2']
+            valid_types = ['v1', 'v2', 'cmd']
             if basestation_type not in valid_types:
                 raise RuntimeError('Invalid value for basestation.type, valid options: {}'.format(valid_types))
             return basestation_type
@@ -97,6 +97,20 @@ class Config:
                 return self.data['basestation'][field_name]
 
         raise RuntimeError('Value basestation.{} must be set when using V1 Base Stations'.format(field_name))
+
+    def basestation_command(self, target):
+        if target not in ['on', 'off']:
+            raise RuntimeError()
+
+        field_name = 'command_{}'.format(target)
+
+        if 'basestation' in self.data and field_name in self.data['basestation']:
+            command = self.data['basestation'][field_name]
+            if command is not None and not isinstance(command, list):
+                raise RuntimeError('Command must be a list of strings (or null), found: {}'.format(command))
+            return command
+
+        return None
 
     def audio_enabled(self):
         if 'audio' in self.data and 'enabled' in self.data['audio']:
