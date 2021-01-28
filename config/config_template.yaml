@@ -16,6 +16,7 @@ basestation:
 
   # ==== FOR V2 BASE STATIONS ONLY ====
   attempt_count_scan: 5  # Int >0. Maximum number of attempts to find Base Stations.
+  scan_type: 'active'  # Enum(active, passive). Type of bluetooth scan to use (see https://github.com/DavidRisch/steamvr_utils/issues/3#issuecomment-768580652).
 
   # ==== FOR V1 BASE STATIONS ONLY ====
   # (change the 'type' (a few lines up) to 'v1')

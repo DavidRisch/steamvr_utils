@@ -51,7 +51,7 @@ class Config:
             basestation_type = self.data['basestation']['type']
             valid_types = ['v1', 'v2', 'cmd']
             if basestation_type not in valid_types:
-                raise RuntimeError('Invalid value for basestation.type, valid options: {}'.format(valid_types))
+                raise RuntimeError('Invalid value for basestation:type, valid options: {}'.format(valid_types))
             return basestation_type
 
         return 'v2'
@@ -67,6 +67,16 @@ class Config:
             return int(self.data['basestation']['attempt_count_scan'])
 
         return 5
+
+    def basestation_scan_type(self):
+        if 'basestation' in self.data and 'scan_type' in self.data['basestation']:
+            basestation_scan_type = self.data['basestation']['scan_type']
+            valid_types = ['active', 'passive']
+            if basestation_scan_type not in valid_types:
+                raise RuntimeError('Invalid value for basestation:scan_type, valid options: {}'.format(valid_types))
+            return basestation_scan_type
+
+        return 'active'
 
     def basestation_attempt_count_set(self):
         if 'basestation' in self.data and 'attempt_count_set' in self.data['basestation']:
@@ -84,7 +94,7 @@ class Config:
             if len(self.data['basestation'][field_name]) > 0:
                 return self.data['basestation'][field_name]
 
-        raise RuntimeError('Value basestation.{} must be set when using V1 Base Stations'.format(field_name))
+        raise RuntimeError('Value basestation:{} must be set when using V1 Base Stations'.format(field_name))
 
     def basestation_id(self, mode):
         if mode not in ['b', 'c']:
@@ -96,7 +106,7 @@ class Config:
             if len(self.data['basestation'][field_name]) > 0:
                 return self.data['basestation'][field_name]
 
-        raise RuntimeError('Value basestation.{} must be set when using V1 Base Stations'.format(field_name))
+        raise RuntimeError('Value basestation:{} must be set when using V1 Base Stations'.format(field_name))
 
     def basestation_command(self, target):
         if target not in ['on', 'off']:

@@ -42,7 +42,10 @@ class V2BasestationInterface(BasestationInterface):
         delegate = Delegate()
         scanner.withDelegate(delegate)
         try:
-            scanner.scan(2)
+            scanner.scan(
+                timeout=2,
+                passive=self.config.basestation_scan_type() == 'passive'
+            )
         except bluepy.btle.BTLEManagementError as e:
             log.e(e)
             if 'code: 20, error: Permission Denied' in str(e):
@@ -55,6 +58,17 @@ Missing Permissions for Bluetooth. Two options:
     sudo setcap 'cap_net_raw,cap_net_admin+eip' /home/$USER/.local/lib/python3.?/site-packages/bluepy/bluepy-helper
     see: https://github.com/IanHarvey/bluepy/issues/313#issuecomment-428324639
                     ''')
+
+            elif 'Failed to execute management command \'pasvend\'' in str(e):
+                raise RuntimeError('''
+Passive bluetooth scan failed. Consider editing your config to set basestation:scan_type to 'active'.
+Original error: {}'''.format(e))
+
+            elif 'Failed to execute management command \'scanend\'' in str(e):
+                raise RuntimeError('''
+Active bluetooth scan failed. Consider editing your config to set basestation:scan_type to 'passive'.
+Original error: {}'''.format(e))
+
             else:
                 raise e
 
