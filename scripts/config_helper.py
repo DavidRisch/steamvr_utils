@@ -55,8 +55,10 @@ class ConfigHelper:
                     card_port_product_names.append(port.product_name)
 
         help_text += '''
-# ==== Help for audio:card_port_product_name_regex ====
-# current value for audio:card_port_product_name_regex:
+# ==== Help for audio:card_vr_port_product_name_regex and audio:card_normal_port_product_name_regex ====
+# current value for audio:card_vr_port_product_name_regex:
+{}
+# current value for audio:card_normal_port_product_name_regex:
 {}
 # Exactly one line should match your regex.
 # Card port product names: (SteamVR needs to run for the HMD to show up here)
@@ -64,6 +66,7 @@ class ConfigHelper:
 
 '''.format(
             self.config.audio_card_port_vr_product_name_regex(),
+            self.config.audio_card_normal_port_product_name_regex(),
             '\n'.join(card_port_product_names)
         )
 
