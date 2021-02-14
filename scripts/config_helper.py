@@ -66,7 +66,7 @@ class ConfigHelper:
 
 '''.format(
             self.config.audio_card_port_vr_product_name_regex(),
-            self.config.audio_card_normal_port_product_name_regex(),
+            self.config.audio_card_port_normal_product_name_regex(),
             '\n'.join(card_port_product_names)
         )
 
