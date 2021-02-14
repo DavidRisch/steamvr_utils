@@ -6,3 +6,5 @@
 /images/*.xcf
 
 /.idea/
+
+*.pyc

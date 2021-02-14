@@ -5,6 +5,8 @@ import os
 
 import yaml
 
+import log
+
 
 class Config:
     def __init__(self, config_path=None, dry_run_overwrite=False):
@@ -152,11 +154,22 @@ class Config:
 
         return True
 
-    def audio_card_port_product_name_regex(self):
+    def audio_card_port_vr_product_name_regex(self):
+        if 'audio' in self.data and 'card_port_vr_product_name_regex' in self.data['audio']:
+            return self.data['audio']['card_port_vr_product_name_regex']
+
         if 'audio' in self.data and 'card_port_product_name_regex' in self.data['audio']:
+            log.w(
+                "Using deprecated config value audio:card_port_product_name_regex, use audio:card_port_vr_product_name_regex instead!")
             return self.data['audio']['card_port_product_name_regex']
 
         return '(Index HMD)|(VIVE)'
+
+    def audio_card_port_normal_product_name_regex(self):
+        if 'audio' in self.data and 'card_port_normal_product_name_regex' in self.data['audio']:
+            return self.data['audio']['card_port_normal_product_name_regex']
+
+        return None
 
     def audio_card_rescan_pause_time(self):
         if 'audio' in self.data and 'card_rescan_pause_time' in self.data['audio']:
