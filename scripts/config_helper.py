@@ -8,7 +8,7 @@ class ConfigHelper:
 
     def print_help(self):
         help_text = '''
-# Because regular expressions can often be unintuitive the following output 
+# Because regular expressions can often be unintuitive the following output
 # provides help for configuring steamvr_utils to your setup/preferences.
 
 # Recommended procedure:
@@ -63,7 +63,7 @@ class ConfigHelper:
 {}
 
 '''.format(
-            self.config.audio_card_port_product_name_regex(),
+            self.config.audio_card_port_vr_product_name_regex(),
             '\n'.join(card_port_product_names)
         )
 

@@ -6,8 +6,7 @@ import time
 import log
 import pactl_interface
 
-
-# tested with pactl version 13.99.1
+# tested with pactl version 14.2
 
 class AudioSwitcher:
     class Failure:
@@ -84,7 +83,7 @@ class AudioSwitcher:
 
         if self.config.audio_set_card_port():
             last_port = self.port
-            self.port = self.get_port()
+            self.port = self.get_vr_port()
             if last_port != self.port:
                 log.d('New port: {}'.format(self.port))
 
@@ -96,33 +95,39 @@ class AudioSwitcher:
                 # Causes a rescan of connected ports, only works if time passes between suspend and resume
                 self.vr_sink.set_suspend_state(self.config, False)
 
-        self.set_sink(self.vr_sink)
+        self.set_sink_for_all_sink_inputs(self.vr_sink)
 
     def switch_to_normal(self):
-        self.set_sink(self.normal_sink)
+        if self.config.audio_set_card_port():
+            self.port = self.get_normal_port()
 
-    def set_sink(self, sink):
-        # self.set_default_sink(sink)
-        self.set_sink_for_all_sink_inputs(sink)
+            if self.port is not None:
+                self.port.card.set_profile(self.config, self.port.profiles[0])
+            else:
+                self.normal_sink.set_suspend_state(self.config, True)
+                time.sleep(self.config.audio_card_rescan_pause_time())
+                # Causes a rescan of connected ports, only works if time passes between suspend and resume
+                self.normal_sink.set_suspend_state(self.config, False)
+
+        self.set_sink_for_all_sink_inputs(self.normal_sink)
 
     def log_state(self):
         log.d('last_pactl_sinks:\n{}'.format(self.last_pactl_sinks))
         log.d('last_pactl_sink_inputs:\n{}'.format(self.last_pactl_sink_inputs))
         log.d('last_pactl_clients:\n{}'.format(self.last_pactl_clients))
 
-    def set_default_sink(self, sink):
-        if self.config.dry_run():
-            log.w('Skipping because of dry run')
+    def set_sink_for_all_sink_inputs(self, sink):
+        # verify sink name exists before proceeding
+        sinks = pactl_interface.Sink.get_all_sinks(self)
+        found = False
+        for s in sinks:
+            if s.name == sink.name:
+                found = True
+
+        if not found:
+            log.d('Skipping move-sink-input since the sink name does not exist')
             return
 
-        arguments = ['pactl', 'set-default-sink', sink.name]
-        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
-
-        if return_code != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
-            self.log_state()
-
-    def set_sink_for_all_sink_inputs(self, sink):
         sink_inputs = pactl_interface.SinkInput.get_all_sink_inputs(self)
         pactl_interface.Client.get_client_names(sink_inputs)
         sink_inputs = self.filter_by_client_name(sink_inputs)
@@ -170,13 +175,13 @@ class AudioSwitcher:
                            'Workaround: Fill out the "normal_sink_regex" field in the config file.\n\n'
                            'Output of `pactl info`:\n{}'.format(stdout))
 
-    def get_port(self):
+    def get_normal_port(self):
         cards = pactl_interface.Card.get_all_cards()
-        card_port_product_name_regex = self.config.audio_card_port_product_name_regex()
+        card_port_normal_product_name_regex = self.config.audio_card_port_normal_product_name_regex()
         for card in cards:
             for port in card.ports:
                 if port.product_name is not None:
-                    if re.match(card_port_product_name_regex, port.product_name):
+                    if re.match(card_port_normal_product_name_regex, port.product_name):
                         return port
 
         debug_output = ''
@@ -185,7 +190,27 @@ class AudioSwitcher:
             for port in card.ports:
                 debug_output += '    {}\n'.format(port.product_name if port.product_name is not None else '-')
         log.w('Failed to find any port on any card matching "{}". Name of the product at every port:\n{}'.format(
-            card_port_product_name_regex, debug_output
+            card_port_normal_product_name_regex, debug_output
+        ))
+
+        return None
+
+    def get_vr_port(self):
+        cards = pactl_interface.Card.get_all_cards()
+        card_port_vr_product_name_regex = self.config.audio_card_port_vr_product_name_regex()
+        for card in cards:
+            for port in card.ports:
+                if port.product_name is not None:
+                    if re.match(card_port_vr_product_name_regex, port.product_name):
+                        return port
+
+        debug_output = ''
+        for card in cards:
+            debug_output += card.name + '\n'
+            for port in card.ports:
+                debug_output += '    {}\n'.format(port.product_name if port.product_name is not None else '-')
+        log.w('Failed to find any port on any card matching "{}". Name of the product at every port:\n{}'.format(
+            card_port_vr_product_name_regex, debug_output
         ))
 
         return None
