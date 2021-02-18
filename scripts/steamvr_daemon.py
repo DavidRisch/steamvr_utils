@@ -30,7 +30,7 @@ class SteamvrDaemon:
     @classmethod
     def create_daemon(cls, steamvr_utils):
         # TODO: causes process to end itself
-        # kill other instances of this deamon to make sure only one is running at any given time
+        # kill other instances of this daemon to make sure only one is running at any given time
         # subprocess.run(['killall', 'steamvr_utils.py d'])
 
         # based on: https://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/

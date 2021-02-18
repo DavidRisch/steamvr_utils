@@ -26,7 +26,7 @@ Install dependencies (the last command is required for bluepy to run without roo
 
 ```bash
 sudo apt install pip3 libglib2.0-dev
-sudo pip3 install bluepy
+sudo pip3 install bluepy psutil
 sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.?/dist-packages/bluepy/bluepy-helper
 ```
 
@@ -45,10 +45,10 @@ Try out what works before changing the default configuration.
 
 Follow the instruction returned by `./scripts/install.py`.
 
-#### Start deamon manually:
+#### Start daemon manually:
 
 ```bash
-./scripts/steamvr_utils.py deamon
+./scripts/steamvr_utils.py daemon
 ```
 
 #### Turn Base Stations on and switch audio to the headset:
