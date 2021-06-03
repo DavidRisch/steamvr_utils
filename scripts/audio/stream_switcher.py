@@ -5,6 +5,8 @@ import time
 import log
 import pactl_interface
 
+from .output_logger import OutputLogger
+
 
 class StreamSwitcher:
     class StreamType(enum.Enum):
@@ -33,9 +35,7 @@ class StreamSwitcher:
         self.config = config
         self.stream_type = stream_type
 
-        self.last_pactl_sinks = None
-        self.last_pactl_sink_inputs = None
-        self.last_pactl_clients = None
+        self.output_logger = OutputLogger()
 
         self.failed_stream_connections = []  # stream_connections for which move-sink-input failed (Failure class)
 
@@ -105,11 +105,6 @@ class StreamSwitcher:
     def switch_to_normal(self):
         self.switch_to_stream(self.normal_stream, "normal")
 
-    def log_state(self):
-        log.d('last_pactl_{}:\n{}'.format(self.get_stream_type_name(), self.last_pactl_streams))
-        log.d('last_pactl_{}:\n{}'.format(self.get_stream_type_name(), self.last_pactl_stream_connections))
-        log.d('last_pactl_clients:\n{}'.format(self.last_pactl_clients))
-
     def set_stream_for_all_stream_connections(self, stream):
         if self.config.dry_run():
             log.w('Skipping because of dry run')
@@ -153,7 +148,7 @@ class StreamSwitcher:
                     stream_input.client_name,
                     failure.failure_count,
                     stderr))
-                self.log_state()
+                self.output_logger.log_all()
 
     def get_default_stream_name(self):
         arguments = ['pactl', 'info']

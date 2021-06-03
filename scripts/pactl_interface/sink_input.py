@@ -1,5 +1,3 @@
-import log
-
 from . import utlis
 from .stream_connection import StreamConnection
 
@@ -9,14 +7,12 @@ class SinkInput(StreamConnection):
         super().__init__(line)
 
     @classmethod
-    def get_all_sink_inputs(cls, audio_switcher=None):
+    def get_all_sink_inputs(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'sink-inputs']
         return_code, stdout, stderr = utlis.run(arguments)
 
-        if audio_switcher is not None:
-            if audio_switcher.last_pactl_sink_inputs is None:
-                log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
-            audio_switcher.last_pactl_sink_inputs = stdout
+        if output_logger is not None:
+            output_logger.add_output(arguments, stdout, print_first=True)
 
         sink_inputs_lines = stdout.split('\n')[:-1]
 

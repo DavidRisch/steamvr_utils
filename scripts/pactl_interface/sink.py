@@ -26,14 +26,12 @@ class Sink(Stream):
             log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
 
     @classmethod
-    def get_all_sinks(cls, audio_switcher=None):
+    def get_all_sinks(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'sinks']
         return_code, stdout, stderr = utlis.run(arguments)
 
-        if audio_switcher is not None:
-            if audio_switcher.last_pactl_sinks is None:
-                log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
-            audio_switcher.last_pactl_sinks = stdout
+        if output_logger is not None:
+            output_logger.add_output(arguments, stdout, print_first=True)
 
         sinks_lines = stdout.split('\n')[:-1]
 

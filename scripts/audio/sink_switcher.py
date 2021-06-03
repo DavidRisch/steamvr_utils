@@ -20,10 +20,10 @@ class SinkSwitcher(StreamSwitcher):
         return self.config.audio_normal_sink_regex()
 
     def get_all_streams(self):
-        return pactl_interface.Sink.get_all_sinks(self)
+        return pactl_interface.Sink.get_all_sinks(self.output_logger)
 
     def get_all_stream_connections(self):
-        return pactl_interface.SinkInput.get_all_sink_inputs(self)
+        return pactl_interface.SinkInput.get_all_sink_inputs(self.output_logger)
 
     def switch_to_stream(self, stream, device_type):
         if self.config.audio_set_card_port():

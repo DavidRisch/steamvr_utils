@@ -1,5 +1,3 @@
-import log
-
 from . import utlis
 
 
@@ -9,14 +7,12 @@ class Client:
         self.client_name = line.split('\t')[2]
 
     @classmethod
-    def get_all_clients(cls, audio_switcher=None):
+    def get_all_clients(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'clients']
         return_code, stdout, stderr = utlis.run(arguments)
 
-        if audio_switcher is not None:
-            if audio_switcher.last_pactl_clients is None:
-                log.d('\'{}\':\n{}'.format(" ".join(arguments), stdout))
-            audio_switcher.last_pactl_clients = stdout
+        if output_logger is not None:
+            output_logger.add_output(arguments, stdout, print_first=True)
 
         client_lines = stdout.split('\n')[:-1]
 
