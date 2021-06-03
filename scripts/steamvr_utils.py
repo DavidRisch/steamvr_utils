@@ -3,9 +3,9 @@
 import argparse
 import enum
 
+import audio
 import basestation_interface
 import log
-from audio_switcher import AudioSwitcher
 from config import Config
 from config_helper import ConfigHelper
 from steamvr_daemon import SteamvrDaemon
@@ -26,7 +26,7 @@ class SteamvrUtils:
         self.turn_off_at = None  # time at which self.turn_of() will be executed (see --wait)
 
         self.basestation_power_interface = None
-        self.audio_switcher = None
+        self.sink_switcher = None
 
         if self.config.basestation_enabled():
             basestation_type = self.config.basestation_type()
@@ -40,7 +40,7 @@ class SteamvrUtils:
                 raise NotImplementedError()
 
         if self.config.audio_enabled():
-            self.audio_switcher = AudioSwitcher(config)
+            self.sink_switcher = audio.SinkSwitcher(config)
 
     def action(self, action):
         if action == self.Action.ON:
@@ -62,8 +62,8 @@ class SteamvrUtils:
         if self.basestation_power_interface is not None:
             self.basestation_power_interface.action(basestation_interface.Action.OFF)
 
-        if self.audio_switcher is not None:
-            self.audio_switcher.switch_to_normal()
+        if self.sink_switcher is not None:
+            self.sink_switcher.switch_to_normal()
 
     def turn_on(self):
         log.i('SteamvrUtils turning on:')
@@ -71,12 +71,12 @@ class SteamvrUtils:
         if self.basestation_power_interface is not None:
             self.basestation_power_interface.action(basestation_interface.Action.ON)
 
-        if self.audio_switcher is not None:
-            self.audio_switcher.switch_to_vr()
+        if self.sink_switcher is not None:
+            self.sink_switcher.switch_to_vr()
 
     def turn_on_iteration(self):
-        if self.audio_switcher is not None:
-            self.audio_switcher.switch_to_vr()
+        if self.sink_switcher is not None:
+            self.sink_switcher.switch_to_vr()
 
 
 def main():

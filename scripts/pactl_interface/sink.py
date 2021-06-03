@@ -1,11 +1,12 @@
 import log
 
 from . import utlis
+from .stream import Stream
 
 
-class Sink:
+class Sink(Stream):
     def __init__(self, line):
-        self.name = line.split('\t')[1]
+        super().__init__(line)
 
     def set_suspend_state(self, config, state):
         if config.dry_run():
