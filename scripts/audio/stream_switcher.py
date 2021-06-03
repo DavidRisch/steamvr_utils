@@ -134,7 +134,7 @@ class StreamSwitcher:
                 continue
 
             arguments = ['pactl', 'move-stream-input', str(stream_input.id), stream.name]
-            return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
+            return_code, stdout, stderr = pactl_interface.utlis.run(arguments, assert_success=False)
 
             if return_code != 0:
                 if failure is None:
@@ -152,7 +152,7 @@ class StreamSwitcher:
 
     def get_default_stream_name(self):
         arguments = ['pactl', 'info']
-        return_code, stdout, stderr = pactl_interface.utlis.run(arguments)
+        return_code, stdout, stderr = pactl_interface.utlis.run(arguments, assert_success=True)
 
         info_lines = stdout.split('\n')[:-1]
 

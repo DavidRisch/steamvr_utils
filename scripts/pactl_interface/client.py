@@ -9,7 +9,7 @@ class Client:
     @classmethod
     def get_all_clients(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'clients']
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=True)
 
         if output_logger is not None:
             output_logger.add_output(arguments, stdout, print_first=True)

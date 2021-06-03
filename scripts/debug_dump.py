@@ -30,7 +30,7 @@ def debug_dump():
     ]
 
     for command in commands:
-        return_code, stdout, stderr = pactl_interface.utlis.run(command)
+        return_code, stdout, stderr = pactl_interface.utlis.run(command, assert_success=False)
 
         log.i("command: {}: return_code: {}\nstdout:\n{}\nstderr:\n{}".format(
             command, return_code, stdout, stderr

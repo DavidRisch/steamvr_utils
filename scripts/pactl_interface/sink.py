@@ -20,7 +20,7 @@ class Sink(Stream):
 
         arguments = ['pactl', 'suspend-sink', self.name, state]
         log.d('set_suspend_state {}'.format(' '.join(arguments)))
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=False)
 
         if return_code != 0:
             log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
@@ -28,7 +28,7 @@ class Sink(Stream):
     @classmethod
     def get_all_sinks(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'sinks']
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=True)
 
         if output_logger is not None:
             output_logger.add_output(arguments, stdout, print_first=True)

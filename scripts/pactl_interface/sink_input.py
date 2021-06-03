@@ -9,7 +9,7 @@ class SinkInput(StreamConnection):
     @classmethod
     def get_all_sink_inputs(cls, output_logger=None):
         arguments = ['pactl', 'list', 'short', 'sink-inputs']
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=True)
 
         if output_logger is not None:
             output_logger.add_output(arguments, stdout, print_first=True)

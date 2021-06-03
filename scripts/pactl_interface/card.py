@@ -97,7 +97,7 @@ class Card:
             return
 
         arguments = ['pactl', 'set-card-profile', self.name, profile.name]
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=False)
 
         if return_code != 0:
             log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
@@ -113,10 +113,7 @@ class Card:
     @staticmethod
     def rescan_all_cards():
         arguments = ['pactl', 'load-module', 'module-detect']
-        return_code, stdout, stderr = utlis.run(arguments)
-
-        if return_code != 0:
-            log.e('\'{}\' () failed, stderr:\n{}'.format(" ".join(arguments), stderr))
+        utlis.run(arguments, assert_success=True)
 
     @staticmethod
     def cleanup_pactl_output(cards):
@@ -136,7 +133,7 @@ class Card:
     @classmethod
     def get_all_cards(cls):
         arguments = ['pactl', 'list', 'cards']
-        return_code, stdout, stderr = utlis.run(arguments)
+        return_code, stdout, stderr = utlis.run(arguments, assert_success=True)
 
         cards = stdout
 
