@@ -9,6 +9,7 @@ from audio_switcher import AudioSwitcher
 from config import Config
 from config_helper import ConfigHelper
 from steamvr_daemon import SteamvrDaemon
+from version import __version__
 
 
 class SteamvrUtils:
@@ -100,6 +101,9 @@ def main():
     parser.add_argument('--config',
                         default=None,
                         help='Path to a config file.')
+    parser.add_argument('--version',
+                        action='version',
+                        version='steamvr_utils {version}'.format(version=__version__))
     args = parser.parse_args()
 
     config = Config(config_path=args.config, dry_run_overwrite=args.dry_run)
@@ -119,6 +123,7 @@ def main():
             config_helper.print_help()
             return
 
+        log.i('steamvr_utils version: {}'.format(__version__))
         log.d('dry_run: {}'.format(config.dry_run()))
 
         steamvr_utils = SteamvrUtils(
