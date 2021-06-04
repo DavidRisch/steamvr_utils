@@ -13,8 +13,8 @@ class StreamSwitcher:
         sink = 'sink'
 
     class Failure:
-        def __init__(self, stream_input_id):
-            self.stream_input_id = stream_input_id
+        def __init__(self, stream_connection_id):
+            self.stream_connection_id = stream_connection_id
             self.failure_count = 1
             self.last_failure = time.time()
 
@@ -75,6 +75,9 @@ class StreamSwitcher:
     def get_all_stream_connections(self):
         raise NotImplementedError()
 
+    def get_move_stream_connection_command(self):
+        raise NotImplementedError()
+
     def find_matching_stream(self, streams, regex, name):
         matches = [
             stream for stream in streams if re.match(regex, stream.name)
@@ -118,34 +121,37 @@ class StreamSwitcher:
                 found = True
 
         if not found:
-            log.w('Skipping move-stream-input since the stream name does not exist')
+            log.w('Skipping {} since the {} name does not exist'.format(
+                self.get_move_stream_connection_command(), self.get_stream_type_name()
+            ))
             return
 
         stream_connections = self.get_all_stream_connections()
         pactl_interface.Client.get_client_names(stream_connections)
         stream_connections = self.filter_by_client_name(stream_connections)
 
-        for stream_input in stream_connections:
+        for stream_connection in stream_connections:
             failure = \
                 ([failure for failure in self.failed_stream_connections if
-                  failure.stream_input_id == stream_input.id] + [
+                  failure.stream_connection_id == stream_connection.id] + [
                      None])[0]
             if failure is not None and not failure.try_again():
                 continue
 
-            arguments = ['pactl', 'move-stream-input', str(stream_input.id), stream.name]
+            arguments = ['pactl', self.get_move_stream_connection_command(), str(stream_connection.id), stream.name]
+            log.w("move {}".format(" ".join(arguments)))
             return_code, stdout, stderr = pactl_interface.utlis.run(arguments, assert_success=False)
 
             if return_code != 0:
                 if failure is None:
-                    failure = self.Failure(stream_input.id)
+                    failure = self.Failure(stream_connection.id)
                     self.failed_stream_connections.append(failure)
                 else:
                     failure.add_attempt()
 
                 log.e('\'{}\' (client_name: {}) failed (count: {}), stderr:\n{}'.format(
                     " ".join(arguments),
-                    stream_input.client_name,
+                    stream_connection.client_name,
                     failure.failure_count,
                     stderr))
                 self.output_logger.log_all()

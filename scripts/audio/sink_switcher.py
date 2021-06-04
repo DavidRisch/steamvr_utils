@@ -25,6 +25,9 @@ class SinkSwitcher(StreamSwitcher):
     def get_all_stream_connections(self):
         return pactl_interface.SinkInput.get_all_sink_inputs(self.output_logger)
 
+    def get_move_stream_connection_command(self):
+        return 'move-sink-input'
+
     def switch_to_stream(self, stream, device_type):
         if self.config.audio_set_card_port():
             port = self.get_port(device_type)
