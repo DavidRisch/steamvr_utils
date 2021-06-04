@@ -3,7 +3,7 @@
 This project contains scripts to improve the functionally of SteamVR on Linux:
 
 - Turning Base Stations (V1 or V2) on/off (via Bluetooth)
-- Changing the audio output of games to the headset and back to the normal audio device
+- Changing the audio output and input of games to the headset and back to the normal audio devices
 
 A daemon can start automatically with SteamVR (via launch options), once SteamVR is closed the Base Stations are turned
 off again. Alternatively the scripts can be executed manually.

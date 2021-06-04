@@ -11,6 +11,7 @@ from .output_logger import OutputLogger
 class StreamSwitcher:
     class StreamType(enum.Enum):
         sink = 'sink'
+        source = 'source'
 
     class Failure:
         def __init__(self, stream_connection_id):
@@ -165,6 +166,8 @@ class StreamSwitcher:
         for line in info_lines:
             if self.stream_type == self.StreamType.sink:
                 regex = '^Default Sink: (.*)'
+            elif self.stream_type == self.StreamType.source:
+                regex = '^Default Source: (.*)'
 
             matches = re.match(regex, line)
             if matches is not None:

@@ -35,10 +35,18 @@ basestation:
 
 audio:
   enabled: true  # Boolean. Enable the Base Station component.
-  vr_sink_regex: '.*hdmi.*'  # Regex. Used to find the audio sink of the vr headset.
+
+  change_sink: true  # Boolean. Automatically change the sink (audio output).
+  vr_sink_regex: '.*hdmi.*'  # Regex. Used to find the audio sink of the vr headset
   normal_sink_regex: ''  # Regex. Used to find the audio sink of the regular audio device. Leave empty to detect automatically (not recommended).
+
+  change_source: true  # Boolean. Automatically change the source (microphone).
+  vr_source_regex: '.*Valve_Corporation_Valve_VR_Radio___HMD_Mic.*'  # Regex. Used to find the audio source of the vr headset.
+  normal_source_regex: ''  # Regex. Used to find the audio source of the regular audio device. Leave empty to detect automatically (not recommended).
+
   excluded_clients_regexes: # List of regexes. Used to ignore some audio clients. Intended for application not needed in vr.
     - 'firefox'
+
   set_card_port: true  # Boolean. Enable automatic changing the correct port.
   card_port_vr_product_name_regex: '(Index HMD)|(VIVE)'  # Regex. Used to find the card and port on that card which the vr headset is connected to.
   card_port_normal_product_name_regex: ''  # Regex. Used to find the card and port on that card to restore audio to the normal device.

@@ -25,6 +25,9 @@ def debug_dump():
     commands = [
         ['pactl', 'info'],
         ['pactl', 'list', 'short', 'sinks'],
+        ['pactl', 'list', 'short', 'sources'],
+        ['pactl', 'list', 'short', 'sink-inputs'],
+        ['pactl', 'list', 'short', 'source-outputs'],
         ['pactl', 'list', 'short', 'clients'],
         ['pactl', 'list', 'cards'],
     ]

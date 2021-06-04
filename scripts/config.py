@@ -130,6 +130,12 @@ class Config:
 
         return False
 
+    def audio_change_sink(self):
+        if 'audio' in self.data and 'change_sink' in self.data['audio']:
+            return bool(self.data['audio']['change_sink'])
+
+        return True
+
     def audio_vr_sink_regex(self):
         if 'audio' in self.data and 'vr_sink_regex' in self.data['audio']:
             return self.data['audio']['vr_sink_regex']
@@ -139,6 +145,24 @@ class Config:
     def audio_normal_sink_regex(self):
         if 'audio' in self.data and 'normal_sink_regex' in self.data['audio']:
             return self.data['audio']['normal_sink_regex']
+
+        return None
+
+    def audio_change_source(self):
+        if 'audio' in self.data and 'change_source' in self.data['audio']:
+            return bool(self.data['audio']['change_source'])
+
+        return True
+
+    def audio_vr_source_regex(self):
+        if 'audio' in self.data and 'vr_source_regex' in self.data['audio']:
+            return self.data['audio']['vr_source_regex']
+
+        return '.*Valve_Corporation_Valve_VR_Radio___HMD_Mic.*'
+
+    def audio_normal_source_regex(self):
+        if 'audio' in self.data and 'normal_source_regex' in self.data['audio']:
+            return self.data['audio']['normal_source_regex']
 
         return None
 

@@ -27,13 +27,4 @@ class Sink(Stream):
 
     @classmethod
     def get_all_sinks(cls, output_logger=None):
-        arguments = ['pactl', 'list', 'short', 'sinks']
-        return_code, stdout, stderr = utlis.run(arguments, assert_success=True)
-
-        if output_logger is not None:
-            output_logger.add_output(arguments, stdout, print_first=True)
-
-        sinks_lines = stdout.split('\n')[:-1]
-
-        sinks = [cls(line) for line in sinks_lines]
-        return sinks
+        return Stream._get_all('sinks', cls, output_logger)

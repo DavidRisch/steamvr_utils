@@ -47,6 +47,29 @@ class ConfigHelper:
             '\n'.join(sink_names)
         )
 
+        sources = pactl_interface.Source.get_all_sources()
+
+        source_names = [
+            source.name
+            for source in sources
+        ]
+
+        help_text += '''
+# ==== Help for audio:vr_source_regex and audio:normal_source_regex ====
+# Current value for audio:vr_source_regex:
+{}
+# Current value for audio:normal_source_regex:
+{}
+# Exactly one line should match each of your regexes.
+# Sources:
+{}
+
+'''.format(
+            self.config.audio_vr_source_regex(),
+            self.config.audio_normal_source_regex(),
+            '\n'.join(source_names)
+        )
+
         card_port_product_names = []
         cards = pactl_interface.Card.get_all_cards()
         for card in cards:
