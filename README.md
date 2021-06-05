@@ -80,6 +80,9 @@ Some config values are regular expressions (regexes), to get help with configuri
 
 For usage with V1 Base Stations some configuration is required, V2 Base Stations work out-of-the-box.
 
+## Changelog
+[See CHANGELOG.md](CHANGELOG.md).
+
 ## Acknowledgments
 
 - Part of `scripts/basestation_interface/v2_interface.py` is based
