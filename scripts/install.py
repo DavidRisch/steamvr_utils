@@ -9,7 +9,7 @@ def print_launch_options(steamvr_utils_path):
         steamvr_utils_path=steamvr_utils_path)
 
     print(
-        'INSTRUCTIONS: Paste the following line in the launch options of SteamVR (Library | right click on SteamVR | Properties... | General | Set launch options...):\n' + launch_options)
+        'INSTRUCTIONS: Paste the following line in the launch options of SteamVR (LIBRARY | right click on SteamVR | Properties... | GENERAL | LAUNCH OPTIONS):\n' + launch_options)
 
 
 def test_imports():
