@@ -30,7 +30,7 @@ sudo pip3 install bluepy psutil
 sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.?/dist-packages/bluepy/bluepy-helper
 ```
 
-Get launch options to configure SteamVr with and create desktop shortcuts:
+Get launch options to configure SteamVR with and create desktop shortcuts:
 
 ```bash
 ./scripts/install.py
@@ -79,6 +79,20 @@ Some config values are regular expressions (regexes), to get help with configuri
 ```
 
 For usage with V1 Base Stations some configuration is required, V2 Base Stations work out-of-the-box.
+
+## Audio switching
+
+The audio component works by switching every sink-input and source-output to the VR headset or their respective normal
+devices. If running in daemon mode, this process is repeated every second to affect any new games which might have been
+started. This is different from simply changing the default sink/source which does not always work as intended.
+
+This program cannot distinguish between games for which it should switch audio to the HMD and other programs which you
+might want to remain unaffected
+(e.g. [recording software](https://github.com/DavidRisch/steamvr_utils/issues/13)). Because the switching is run once a
+second you cannot manually override this with the system settings. Instead, you can add the applications to
+the `audio:excluded_clients_regexes` config value to stop any interactions with that specific program, running
+```./scripts/steamvr_utils.py config-help``` will provide help for that. Should the audio component cause issues, parts of
+it can be disabled using the config options `audio:change_source` and `audio:change_sink`.
 
 ## Changelog
 [See CHANGELOG.md](CHANGELOG.md).
