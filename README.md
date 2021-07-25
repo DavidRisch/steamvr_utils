@@ -25,7 +25,7 @@ git clone https://github.com/DavidRisch/steamvr_utils.git
 Install dependencies (the last command is required for bluepy to run without root privileges):
 
 ```bash
-sudo apt install pip3 libglib2.0-dev
+sudo apt install python3-pip libglib2.0-dev
 sudo pip3 install bluepy psutil
 sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.?/dist-packages/bluepy/bluepy-helper
 ```

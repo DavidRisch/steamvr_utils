@@ -18,7 +18,7 @@ def test_imports():
     except ModuleNotFoundError:
         print('''
 WARNING: 'bluepy' was not found but is required to use bluetooth to connect to Base Stations. Execute these commands to install it:
-sudo apt install pip3 libglib2.0-dev
+sudo apt install python3-pip libglib2.0-dev
 sudo pip3 install bluepy
         ''')
 

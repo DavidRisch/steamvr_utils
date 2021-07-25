@@ -1,6 +1,6 @@
 import time
 
-# sudo apt install pip3 libglib2.0-dev
+# sudo apt install python3-pip libglib2.0-dev
 # sudo pip3 install bluepy
 import bluepy
 import log
