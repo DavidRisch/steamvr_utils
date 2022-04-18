@@ -31,7 +31,7 @@ class V1BasestationInterface(BasestationInterface):
                 '--lh_b_mac', self.config.basestation_mac_address('b'),
                 '--lh_c_id', self.config.basestation_id('c'),
                 '--lh_c_mac', self.config.basestation_mac_address('c'),
-                '--lh_timeout', str(10),
+                '--lh_timeout', str(30),
                 '--ping_sleep', str(5),
                 '--try_count', str(self.config.basestation_attempt_count_set()),
                 '--try_pause', str(1),
