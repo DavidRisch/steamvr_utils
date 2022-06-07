@@ -79,22 +79,43 @@ Original error: {}'''.format(e))
                                'this is probably a problem with your Bluetooth device.')
 
     def action_attempt(self, action):
-        address = 0x12  # location of the byte which sets the power state
+        power_characteristic_uuid = bluepy.btle.UUID("00001525-1212-efde-1523-785feabcd124")
 
         for device in self.devices:
             basestation = bluepy.btle.Peripheral(iface=self.config.basestation_bluetooth_interface())
             log.i('Connecting to {}'.format(device))
             basestation.connect(device, addrType=bluepy.btle.ADDR_TYPE_RANDOM)
 
+            print("services:")
+            services = basestation.getServices()
+            for service in services:
+                print(service.uuid, service.chars, service.hndStart, service.hndEnd)
+            print()
+
+            print("characteristics:")
+            characteristics = basestation.getCharacteristics()
+            for characteristic in characteristics:
+                print(characteristic.uuid, characteristic.handle, characteristic.valHandle,
+                      characteristic.properties)
+            print()
+
+            power_characteristic = None
+            for characteristic in characteristics:
+                if characteristic.uuid == power_characteristic_uuid:
+                    power_characteristic = characteristic
+
+            if power_characteristic is None:
+                raise RuntimeError("Failed to get power_characteristic with uuid " + str(power_characteristic_uuid))
+
             if action == self.Action.ON:
                 if not self.config.dry_run():
-                    basestation.writeCharacteristic(address, b'\x01')
+                    power_characteristic.write(b'\x01')
                 else:
                     log.w('Skipping because of dry run:')
                 log.i('Turning on')
             elif action == self.Action.OFF:
                 if not self.config.dry_run():
-                    basestation.writeCharacteristic(address, b'\x00')
+                    power_characteristic.write(b'\x00')
                 else:
                     log.w('Skipping because of dry run:')
                 log.i('Turning off')
