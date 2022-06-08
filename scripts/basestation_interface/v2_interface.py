@@ -110,18 +110,36 @@ Original error: {}'''.format(e))
             if power_characteristic is None:
                 raise RuntimeError("Failed to get power_characteristic with uuid " + str(power_characteristic_uuid))
 
+            if power_characteristic.supportsRead():
+                print("read (before):", power_characteristic.read())
+            else:
+                print("power_characteristic does not support reading")
+
             if action == self.Action.ON:
                 if not self.config.dry_run():
-                    power_characteristic.write(b'\x01')
+                    print("response:", power_characteristic.write(b'\x01', withResponse=True))
                 else:
                     log.w('Skipping because of dry run:')
                 log.i('Turning on')
             elif action == self.Action.OFF:
                 if not self.config.dry_run():
-                    power_characteristic.write(b'\x00')
+                    # print("response:", power_characteristic.write(b'\x01', withResponse=True))
+                    print("response:", power_characteristic.write(b'\x00', withResponse=True))
                 else:
                     log.w('Skipping because of dry run:')
                 log.i('Turning off')
+
+            if power_characteristic.supportsRead():
+                print("read (after+0):", power_characteristic.read())
+            time.sleep(5)
+            if power_characteristic.supportsRead():
+                print("read (after+5):", power_characteristic.read())
+            time.sleep(5)
+            if power_characteristic.supportsRead():
+                print("read (after+10):", power_characteristic.read())
+            time.sleep(5)
+            if power_characteristic.supportsRead():
+                print("read (after+15):", power_characteristic.read())
 
             basestation.disconnect()
 
