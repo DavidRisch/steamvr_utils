@@ -82,9 +82,12 @@ Original error: {}'''.format(e))
         power_characteristic_uuid = bluepy.btle.UUID("00001525-1212-efde-1523-785feabcd124")
 
         for device in self.devices:
-            basestation = bluepy.btle.Peripheral(iface=self.config.basestation_bluetooth_interface())
             log.i('Connecting to {}'.format(device))
-            basestation.connect(device, addrType=bluepy.btle.ADDR_TYPE_RANDOM)
+            basestation = bluepy.btle.Peripheral(
+                deviceAddr=device,
+                addrType=bluepy.btle.ADDR_TYPE_RANDOM,
+                iface=self.config.basestation_bluetooth_interface()
+            )
 
             print("services:")
             services = basestation.getServices()
