@@ -20,7 +20,7 @@ Download:
 
 ```bash
 git clone https://github.com/DavidRisch/steamvr_utils.git
-cd ./steamvr-utils
+cd ./steamvr_utils
 ```
 
 Install dependencies (the last command is required for bluepy to run without root privileges):
