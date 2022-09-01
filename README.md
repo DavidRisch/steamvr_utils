@@ -20,6 +20,7 @@ Download:
 
 ```bash
 git clone https://github.com/DavidRisch/steamvr_utils.git
+cd ./steamvr_utils
 ```
 
 Install dependencies (the last command is required for bluepy to run without root privileges):
@@ -29,6 +30,7 @@ sudo apt install python3-pip libglib2.0-dev
 sudo pip3 install bluepy psutil
 sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.?/dist-packages/bluepy/bluepy-helper
 ```
+On Arch Linux, bluepy-helper can be found at `/usr/lib/python3.?/site-packages/bluepy/bluepy-helper`.
 
 Get launch options to configure SteamVR with and create desktop shortcuts:
 
@@ -41,7 +43,7 @@ Get launch options to configure SteamVR with and create desktop shortcuts:
 Depending on your setup some configuration (see section below) may be required before these commands work.
 Try out what works before changing the default configuration.
 
-#### Start daemon automatically when SteamVr starts:
+#### Start daemon automatically when SteamVR starts:
 
 Follow the instruction returned by `./scripts/install.py`.
 
