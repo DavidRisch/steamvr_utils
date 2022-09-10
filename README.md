@@ -28,9 +28,9 @@ Install dependencies (the last command is required for bluepy to run without roo
 ```bash
 sudo apt install python3-pip libglib2.0-dev
 sudo pip3 install bluepy psutil
-sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.?/dist-packages/bluepy/bluepy-helper
+sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/lib/python3.*/dist-packages/bluepy/bluepy-helper
 ```
-On Arch Linux, bluepy-helper can be found at `/usr/lib/python3.?/site-packages/bluepy/bluepy-helper`.
+On Arch Linux, bluepy-helper can be found at `/usr/lib/python3.*/site-packages/bluepy/bluepy-helper`.
 
 Get launch options to configure SteamVR with and create desktop shortcuts:
 
