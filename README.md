@@ -1,5 +1,11 @@
 # SteamVR Utils for Linux
 
+### This project is no longer maintained!
+
+Since the Linux version of SteamVR can now turn base stations on and off itself, this project is no longer necessary.
+
+---
+
 This project contains scripts to improve the functionally of SteamVR on Linux:
 
 - Turning Base Stations (V1 or V2) on/off (via Bluetooth)
