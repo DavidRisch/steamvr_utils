@@ -23,7 +23,7 @@ class Config:
             raise RuntimeError('Config file not found: {}'.format(config_path))
 
         with open(config_path, 'r') as config_file:
-            self.data = yaml.load(config_file, Loader=yaml.Loader)
+            self.data = yaml.load(config_file, Loader=yaml.SafeLoader)
 
     def log_path(self):
         if 'log' in self.data and 'enabled' in self.data['log'] and not self.data['log']['enabled']:
